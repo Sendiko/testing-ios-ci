@@ -18,6 +18,12 @@ jobs:
       - name: Make Gradle Wrapper Executable
         run: chmod +x ./gradlew
 
+      - name: Show Xcode Environment
+        run: |
+          xcodebuild -version
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
+
       - name: Build KMP Framework
         run: |
           ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64 --stacktrace --info
@@ -29,7 +35,7 @@ jobs:
           xcodebuild build \
             -project iosApp.xcodeproj \
             -scheme iosApp \
-            -destination 'platform=iOS Simulator,name=iPhone 16'
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'
 
       - name: Test iOS
         run: |
