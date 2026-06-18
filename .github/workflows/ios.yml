@@ -24,6 +24,22 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
+      - name: Show Build Settings
+        run: |
+          cd iosApp
+          xcodebuild \
+            -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -showBuildSettings | grep IPHONEOS_DEPLOYMENT_TARGET
+
+      - name: Show SDK
+        run: |
+          cd iosApp
+          xcodebuild \
+            -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -showBuildSettings | egrep "IPHONEOS_DEPLOYMENT_TARGET|SDKROOT"
+
       - name: Build KMP Framework
         run: |
           ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64 --stacktrace --info
