@@ -1,0 +1,41 @@
+name: iOS starter workflow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and Test default scheme using any available iPhone simulator
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
+
+      - name: Build KMP Framework
+        run: |
+          ./gradlew :shared:linkDebugFrameworkIosSimulatorArm64 --stacktrace --info
+
+      - name: Build iOS
+        run: |
+          cd iosApp
+          
+          xcodebuild build \
+            -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -destination 'platform=iOS Simulator,name=iPhone 16'
+
+      - name: Test iOS
+        run: |
+          cd iosApp
+          
+          xcodebuild test \
+            -project iosApp.xcodeproj \
+            -scheme iosApp \
+            -destination 'platform=iOS Simulator,name=iPhone 16'
